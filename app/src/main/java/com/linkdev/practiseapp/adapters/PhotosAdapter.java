@@ -23,10 +23,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotosView
 
     private List<File> filesList;
     private Context context;
+    private final OnDataItemClickListener mListener;
 
-    public PhotosAdapter(Context context, List<File> filesList) {
+    public PhotosAdapter(Context context, List<File> filesList, OnDataItemClickListener listener) {
         this.context = context;
         this.filesList = filesList;
+        mListener = listener;
     }
 
     @Override
@@ -40,12 +42,25 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotosView
     public void onBindViewHolder(PhotosViewHolder holder, int position) {
         Bitmap bitmap = BitmapFactory.decodeFile(filesList.get(position).getAbsolutePath());
         holder.ivPicture.setImageBitmap(bitmap);
+
+        holder.itemView.setTag(position);
+        holder.itemView.setOnClickListener(onClickListener);
     }
 
     @Override
     public int getItemCount() {
         return filesList.size();
     }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int pos = (int) view.getTag();
+            if (null != mListener) {
+                mListener.OnDataItemClick(filesList.get(pos));
+            }
+        }
+    };
 
 
     class PhotosViewHolder extends RecyclerView.ViewHolder {
@@ -59,5 +74,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotosView
 
             ivPicture = mView.findViewById(R.id.ivPicture);
         }
+    }
+
+    public interface OnDataItemClickListener {
+        void OnDataItemClick(File item);
     }
 }

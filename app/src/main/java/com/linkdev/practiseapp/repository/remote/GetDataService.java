@@ -14,10 +14,6 @@ import retrofit2.http.GET;
 
 
 public interface GetDataService {
-
-    @GET("/users/Google/repos")
-    Call<List<Repo>> getAllPhotos();
-
-    @GET("/data/2.5/weather?APPID=3646d0447f17c43fe0d9caa38f6eb274&q=cairo")
+    @GET("/data/2.5/weather?APPID=3646d0447f17c43fe0d9caa38f6eb274&q=cairo&units=metric")
     Call<WeatherResponse> getCurrentWeatherData();
 }

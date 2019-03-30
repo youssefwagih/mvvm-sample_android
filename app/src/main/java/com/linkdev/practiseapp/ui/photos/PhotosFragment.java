@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.linkdev.practiseapp.R;
 import com.linkdev.practiseapp.adapters.PhotosAdapter;
+import com.linkdev.practiseapp.ui.photo_preview.PhotoPreviewActivity;
+import com.linkdev.practiseapp.ui.photo_preview.PhotoPreviewFragment;
 
 import java.io.File;
 import java.util.List;
@@ -67,10 +69,17 @@ public class PhotosFragment extends Fragment {
 
     private void showArticlesList(List<File> filesList) {
         if (filesList != null && filesList.size() > 0) {
-            adapter = new PhotosAdapter(getContext(), filesList);
+            adapter = new PhotosAdapter(getContext(), filesList, onDataItemClickListener);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
         }
     }
+
+    PhotosAdapter.OnDataItemClickListener onDataItemClickListener = new PhotosAdapter.OnDataItemClickListener() {
+        @Override
+        public void OnDataItemClick(File item) {
+            PhotoPreviewActivity.startActivity(getContext(), item);
+        }
+    };
 }
