@@ -40,6 +40,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.youssef.weather.util.Constants.WEATHER_ICON_URL;
+
 
 public class WeatherFragment extends Fragment {
     private static final int CAMERA_REQUEST = 1;
@@ -133,7 +135,7 @@ public class WeatherFragment extends Fragment {
         weatherViewModel.getFileSaveStatus().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean isSuccess) {
-                if (isSuccess) {
+                if (isSuccess != null && isSuccess) {
                     imgFinal.setImageBitmap(bitmap);
                     Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_LONG).show();
                 }
@@ -150,7 +152,7 @@ public class WeatherFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 getBitmapFromView(fl, getActivity());
             } else {
-                getScreenShot(fl);
+                getBitmapFromView(fl);
             }
         }
         //
@@ -164,14 +166,13 @@ public class WeatherFragment extends Fragment {
 
         DateFormat df = DateFormat.getDateTimeInstance();
         String updatedOn = df.format(new Date(weatherResponse.getDt() * 1000));
-        txtUpdated.setText("Last update: " + updatedOn);
+        txtUpdated.setText(updatedOn);
 
-
-        Picasso.with(getContext()).load(String.format("http://openweathermap.org/img/w/%s.png", weatherResponse.getWeather().get(0).getIcon())).into(ivWeather);
+        Picasso.with(getContext()).load(String.format(WEATHER_ICON_URL, weatherResponse.getWeather().get(0).getIcon())).into(ivWeather);
     }
 
     // this for deprecated versions before Android API 28
-    void getScreenShot(View screenView) {
+    void getBitmapFromView(View screenView) {
         screenView.setDrawingCacheEnabled(true);
         screenView.buildDrawingCache();
         bitmap = screenView.getDrawingCache();
