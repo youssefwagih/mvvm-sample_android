@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.linkdev.practiseapp">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.youssef.weather">
     <uses-feature android:name="android.hardware.camera"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,16 +14,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.youssef.weather.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.photos.PhotosActivity" />
-        <activity android:name=".ui.photo_preview.PhotoPreviewActivity" />
+        <activity android:name="com.youssef.weather.ui.photos.PhotosActivity" />
+        <activity android:name="com.youssef.weather.ui.photo_preview.PhotoPreviewActivity" />
     </application>
 
 </manifest>
