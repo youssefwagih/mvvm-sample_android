@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PractiseApp</string>
+    <string name="app_name">Weather Photos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -14,4 +14,7 @@
     <string name="weather_thunder">&#xf01e;</string>
     <string name="weather_drizzle">&#xf01c;</string>
     <string name="capture">Capture</string>
+    <string name="something_went_wrong">something went wrong</string>
+    <string name="photos">Photos</string>
+    <string name="home">Home</string>
 </resources>

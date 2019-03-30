@@ -1,4 +1,4 @@
-package com.linkdev.practiseapp.ui.Weather;
+package com.linkdev.practiseapp.ui.weather;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 
  public class WeatherViewModel extends AndroidViewModel {
-    private DataManager dataManager = new DataManagerImp();
-    MutableLiveData<List<Repo>> repos = new MutableLiveData<>();
+    private DataManager dataManager;
 
     public WeatherViewModel(Application application) {
         super(application);
+        dataManager = new DataManagerImp(application.getApplicationContext());
     }
 
     MutableLiveData<WeatherResponse> getCurrentWeatherData() {

@@ -1,9 +1,10 @@
-package com.linkdev.practiseapp.ui.Weather;
+package com.linkdev.practiseapp.ui.weather;
 
 import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.linkdev.practiseapp.R;
 import com.linkdev.practiseapp.repository.model.WeatherResponse;
+import com.linkdev.practiseapp.ui.photos.PhotosActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +36,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -41,6 +44,7 @@ import java.util.Locale;
 public class WeatherFragment extends Fragment {
     private static final int MY_CAMERA_PERMISSION_CODE = 2;
     private static final int CAMERA_REQUEST = 1;
+
     TextView cityField;
     TextView updatedField;
     TextView detailsField;
@@ -49,9 +53,9 @@ public class WeatherFragment extends Fragment {
     FrameLayout fl;
     ImageView iv;
     Button captureBtn;
+    Button photosBtn;
 
-    Bitmap bitmap = null;
-
+    private Bitmap bitmap = null;
     private WeatherViewModel weatherViewModel;
 
     public WeatherFragment() {
@@ -76,6 +80,7 @@ public class WeatherFragment extends Fragment {
         fl = (FrameLayout) view.findViewById(R.id.fl);
         iv = (ImageView) view.findViewById(R.id.iv);
         captureBtn = (Button) view.findViewById(R.id.captureBtn);
+        photosBtn = (Button) view.findViewById(R.id.photosBtn);
 
         return view;
     }
@@ -87,13 +92,21 @@ public class WeatherFragment extends Fragment {
         captureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                iv.setImageBitmap(null);
                 if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_PERMISSION_CODE);
                 } else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, CAMERA_REQUEST);
                 }
-                // iv.setImageBitmap(bitmap);
+            }
+        });
+
+        photosBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = PhotosActivity.createIntent(getContext());
+                startActivity(intent);
             }
         });
 
@@ -120,11 +133,6 @@ public class WeatherFragment extends Fragment {
 
 
         Picasso.with(getContext()).load(String.format("http://openweathermap.org/img/w/%s.png", weatherResponse.getWeather().get(0).getIcon())).into(weatherIcon);
-
-/*
-        setWeatherIcon(weatherResponse.getWeather().get(0).getId(),
-                weatherResponse.getSys().getSunrise() * 1000,
-                weatherResponse.getSys().getSunset() * 1000);*/
     }
 
     //deprecated version
@@ -161,7 +169,7 @@ public class WeatherFragment extends Fragment {
         iv.setImageBitmap(bitmap);
         try {
 
-            savebitmap(bitmap);
+            savebitmap(bitmap, getContext());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,11 +205,17 @@ public class WeatherFragment extends Fragment {
         //
     }
 
-    public static File savebitmap(Bitmap bmp) throws IOException {
+    public static File savebitmap(Bitmap bmp, Context context) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
-        File f = new File(Environment.getExternalStorageDirectory()
-                + File.separator + "testimage.jpg");
+        Date currentTime = Calendar.getInstance().getTime();
+
+        File mydirf = context.getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        if (!mydirf.exists())
+            mydirf.mkdir();
+
+        File f = new File(mydirf, currentTime.toString() + ".jpg");
+
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());

@@ -1,13 +1,17 @@
 package com.linkdev.practiseapp.repository;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.util.Log;
 
 import com.linkdev.practiseapp.network.RetrofitClientInstance;
-import com.linkdev.practiseapp.repository.model.Repo;
 import com.linkdev.practiseapp.repository.model.WeatherResponse;
 import com.linkdev.practiseapp.repository.remote.GetDataService;
+import com.linkdev.practiseapp.util.FileHelper;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -18,23 +22,15 @@ import retrofit2.Callback;
  */
 
 public class DataManagerImp implements DataManager {
-    public MutableLiveData<List<Repo>> getAllRepos() {
-        final MutableLiveData<List<Repo>> repos = new MutableLiveData<>();
+    private Context context;
 
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<Repo>> call = service.getAllPhotos();
-        call.enqueue(new Callback<List<Repo>>() {
-            @Override
-            public void onResponse(Call<List<Repo>> call, retrofit2.Response<List<Repo>> response) {
-                repos.setValue(response.body());
-            }
+    public DataManagerImp(Context context) {
+        this.context = context;
+    }
 
-            @Override
-            public void onFailure(Call<List<Repo>> call, Throwable t) {
-            }
-        });
-
-        return repos;
+    @Override
+    public List<File> getPhotos() {
+        return Arrays.asList(FileHelper.getImagesInAppDirectory(context));
     }
 
     @Override
