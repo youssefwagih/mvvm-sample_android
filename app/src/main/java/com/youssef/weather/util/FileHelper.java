@@ -26,7 +26,7 @@ public class FileHelper {
             return null;
     }
 
-    public static File savebitmap(Bitmap bmp, Context context) throws IOException {
+    public static void savebitmap(Bitmap bmp, Context context) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
         Date currentTime = Calendar.getInstance().getTime();
@@ -41,7 +41,6 @@ public class FileHelper {
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
         fo.close();
-        return f;
     }
 }
 
