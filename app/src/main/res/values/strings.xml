@@ -19,5 +19,5 @@
     <string name="home">Home</string>
     <string name="photo_preview">Photo Preview</string>
     <string name="save_success">photo saved successfully</string>
-    <string name="weather_data">%s Humidity: %d%% Pressure: %d hPa</string>
+    <string name="weather_data">%s \n Humidity: %d%% \n Pressure: %d hPa</string>
 </resources>

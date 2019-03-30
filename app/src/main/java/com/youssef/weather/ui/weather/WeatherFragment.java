@@ -67,17 +67,7 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
-
-        txtCity = (TextView) view.findViewById(R.id.txtCity);
-        txtUpdated = (TextView) view.findViewById(R.id.txtUpdated);
-        txtDetailsField = (TextView) view.findViewById(R.id.txtDetailsField);
-        txtTemp = (TextView) view.findViewById(R.id.txtTemp);
-        ivWeather = (ImageView) view.findViewById(R.id.ivWeather);
-        fl = (FrameLayout) view.findViewById(R.id.fl);
-        imgFinal = (ImageView) view.findViewById(R.id.imgFinal);
-        captureBtn = (Button) view.findViewById(R.id.captureBtn);
-        photosBtn = (Button) view.findViewById(R.id.photosBtn);
-
+        initView(view);
         return view;
     }
 
@@ -85,44 +75,7 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        captureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // reset imageview
-                imgFinal.setImageBitmap(null);
-
-                // take required permission for capturing photo and saving it
-                Dexter.withActivity(getActivity())
-                        .withPermissions(
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA)
-                        .withListener(new MultiplePermissionsListener() {
-                            @Override
-                            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                                if (report.areAllPermissionsGranted()) {
-                                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                                }
-                            }
-
-                            @Override
-                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                                token.continuePermissionRequest();
-                            }
-                        })
-                        .onSameThread()
-                        .check();
-            }
-        });
-
-        photosBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = PhotosActivity.createIntent(getContext());
-                startActivity(intent);
-            }
-        });
+        setListeners();
 
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.getCurrentWeatherData().observe(this, new Observer<WeatherResponse>() {
@@ -143,6 +96,7 @@ public class WeatherFragment extends Fragment {
         });
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -193,17 +147,74 @@ public class WeatherFragment extends Fragment {
                 locationOfViewInWindow[0] + view.getWidth(),
                 locationOfViewInWindow[1] + view.getHeight());
 
-        PixelCopy.request(activity.getWindow(), rect, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
-            @Override
-            public void onPixelCopyFinished(int copyResult) {
-                if (copyResult == PixelCopy.SUCCESS) {
-                    try {
-                        weatherViewModel.savePhoto(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        try {
+            PixelCopy.request(activity.getWindow(), rect, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
+                @Override
+                public void onPixelCopyFinished(int copyResult) {
+                    if (copyResult == PixelCopy.SUCCESS) {
+                        try {
+                            weatherViewModel.savePhoto(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+            }, new Handler());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void initView(View view) {
+        txtCity = (TextView) view.findViewById(R.id.txtCity);
+        txtUpdated = (TextView) view.findViewById(R.id.txtUpdated);
+        txtDetailsField = (TextView) view.findViewById(R.id.txtDetailsField);
+        txtTemp = (TextView) view.findViewById(R.id.txtTemp);
+        ivWeather = (ImageView) view.findViewById(R.id.ivWeather);
+        fl = (FrameLayout) view.findViewById(R.id.fl);
+        imgFinal = (ImageView) view.findViewById(R.id.imgFinal);
+        captureBtn = (Button) view.findViewById(R.id.captureBtn);
+        photosBtn = (Button) view.findViewById(R.id.photosBtn);
+    }
+
+    private void setListeners() {
+        captureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // reset imageview
+                imgFinal.setImageBitmap(null);
+
+                // take required permission for capturing photo and saving it
+                Dexter.withActivity(getActivity())
+                        .withPermissions(
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                if (report.areAllPermissionsGranted()) {
+                                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                                }
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        })
+                        .onSameThread()
+                        .check();
             }
-        }, new Handler());
+        });
+
+        photosBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = PhotosActivity.createIntent(getContext());
+                startActivity(intent);
+            }
+        });
     }
 }
