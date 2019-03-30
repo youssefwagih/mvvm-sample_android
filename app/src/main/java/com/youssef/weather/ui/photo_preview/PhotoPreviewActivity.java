@@ -30,6 +30,6 @@ public class PhotoPreviewActivity extends BaseDetailsActivity {
         if (getIntent().getExtras() != null)
             file = (File) getIntent().getExtras().get(FILE_KEY);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.screenContainer, PhotoPreviewFragment.newInstance(file)).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.flScreenContainer, PhotoPreviewFragment.newInstance(file)).commit();
     }
 }

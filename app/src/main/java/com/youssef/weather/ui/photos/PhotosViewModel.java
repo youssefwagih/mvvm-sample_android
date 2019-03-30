@@ -24,10 +24,10 @@ public class PhotosViewModel extends AndroidViewModel {
     public PhotosViewModel(Application application) {
         super(application);
         dataManager = new DataManagerImp(application.getApplicationContext());
-        fetchArticlesItems();
+        fetchPhotos();
     }
 
-    private void fetchArticlesItems() {
+    private void fetchPhotos() {
         List<File> fileList = dataManager.getPhotos();
 
         if (fileList != null && fileList.size() > 0) {

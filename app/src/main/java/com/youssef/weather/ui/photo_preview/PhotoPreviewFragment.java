@@ -26,10 +26,6 @@ public class PhotoPreviewFragment extends Fragment {
 
     private PhotoPreviewViewModel photoPreviewViewModel;
 
-    public PhotoPreviewFragment() {
-        // Required empty public constructor
-    }
-
     public static PhotoPreviewFragment newInstance(File file) {
         PhotoPreviewFragment photoPreviewFragment = new PhotoPreviewFragment();
         Bundle bundle = new Bundle();
@@ -56,9 +52,9 @@ public class PhotoPreviewFragment extends Fragment {
 
         photoPreviewViewModel.getPhoto().observe(this, new Observer<File>() {
             @Override
-            public void onChanged(@Nullable File articlesResponse) {
-                if (articlesResponse != null)
-                    showPhoto(articlesResponse);
+            public void onChanged(@Nullable File file) {
+                if (file != null)
+                    showPhoto(file);
             }
         });
     }

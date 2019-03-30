@@ -26,10 +26,6 @@ public class PhotosFragment extends Fragment {
 
     private PhotosViewModel photosViewModel;
 
-    public PhotosFragment() {
-        // Required empty public constructor
-    }
-
     public static PhotosFragment newInstance() {
         return new PhotosFragment();
     }
@@ -51,9 +47,9 @@ public class PhotosFragment extends Fragment {
 
         photosViewModel.getPhotos().observe(this, new Observer<List<File>>() {
             @Override
-            public void onChanged(@Nullable List<File> articlesResponse) {
-                if (articlesResponse != null)
-                    showArticlesList(articlesResponse);
+            public void onChanged(@Nullable List<File> filesList) {
+                if (filesList != null)
+                    showPhotos(filesList);
             }
         });
 
@@ -66,7 +62,7 @@ public class PhotosFragment extends Fragment {
         });
     }
 
-    private void showArticlesList(List<File> filesList) {
+    private void showPhotos(List<File> filesList) {
         if (filesList != null && filesList.size() > 0) {
             adapter = new PhotosAdapter(getContext(), filesList, onDataItemClickListener);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);

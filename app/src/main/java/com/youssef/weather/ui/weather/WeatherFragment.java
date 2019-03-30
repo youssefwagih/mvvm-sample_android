@@ -44,22 +44,18 @@ import java.util.Locale;
 public class WeatherFragment extends Fragment {
     private static final int CAMERA_REQUEST = 1;
 
-    TextView cityField;
-    TextView updatedField;
-    TextView detailsField;
-    TextView currentTemperatureField;
-    ImageView weatherIcon;
-    FrameLayout fl;
-    ImageView imgFinal;
-    Button captureBtn;
-    Button photosBtn;
+    private TextView txtCity;
+    private TextView txtUpdated;
+    private TextView txtDetailsField;
+    private TextView txtTemp;
+    private ImageView ivWeather;
+    private FrameLayout fl;
+    private ImageView imgFinal;
+    private Button captureBtn;
+    private Button photosBtn;
 
     private Bitmap bitmap = null;
     private WeatherViewModel weatherViewModel;
-
-    public WeatherFragment() {
-        // Required empty public constructor
-    }
 
     public static WeatherFragment newInstance() {
         return new WeatherFragment();
@@ -68,14 +64,13 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        cityField = (TextView) view.findViewById(R.id.txtCity);
-        updatedField = (TextView) view.findViewById(R.id.txtUpdated);
-        detailsField = (TextView) view.findViewById(R.id.txtDetailsField);
-        currentTemperatureField = (TextView) view.findViewById(R.id.txtTemp);
-        weatherIcon = (ImageView) view.findViewById(R.id.ivWeather);
+        txtCity = (TextView) view.findViewById(R.id.txtCity);
+        txtUpdated = (TextView) view.findViewById(R.id.txtUpdated);
+        txtDetailsField = (TextView) view.findViewById(R.id.txtDetailsField);
+        txtTemp = (TextView) view.findViewById(R.id.txtTemp);
+        ivWeather = (ImageView) view.findViewById(R.id.ivWeather);
         fl = (FrameLayout) view.findViewById(R.id.fl);
         imgFinal = (ImageView) view.findViewById(R.id.imgFinal);
         captureBtn = (Button) view.findViewById(R.id.captureBtn);
@@ -137,8 +132,8 @@ public class WeatherFragment extends Fragment {
 
         weatherViewModel.getFileSaveStatus().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
+            public void onChanged(@Nullable Boolean isSuccess) {
+                if (isSuccess) {
                     imgFinal.setImageBitmap(bitmap);
                     Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_LONG).show();
                 }
@@ -162,19 +157,17 @@ public class WeatherFragment extends Fragment {
     }
 
     private void showWeatherData(WeatherResponse weatherResponse) {
-        cityField.setText(weatherResponse.getSys().getCountry());
+        txtCity.setText(weatherResponse.getSys().getCountry());
 
-        detailsField.setText(
-                String.format("%s\nHumidity: %d%%\nPressure: %d hPa", weatherResponse.getWeather().get(0).getDescription().toUpperCase(Locale.US), weatherResponse.getMain().getHumidity(), weatherResponse.getMain().getPressure()));
-
-        currentTemperatureField.setText(weatherResponse.getMain().getTemp() + " ℃");
+        txtDetailsField.setText(String.format(getString(R.string.weather_data), weatherResponse.getWeather().get(0).getDescription().toUpperCase(Locale.US), weatherResponse.getMain().getHumidity(), weatherResponse.getMain().getPressure()));
+        txtTemp.setText(String.format("%s℃", weatherResponse.getMain().getTemp()));
 
         DateFormat df = DateFormat.getDateTimeInstance();
         String updatedOn = df.format(new Date(weatherResponse.getDt() * 1000));
-        updatedField.setText("Last update: " + updatedOn);
+        txtUpdated.setText("Last update: " + updatedOn);
 
 
-        Picasso.with(getContext()).load(String.format("http://openweathermap.org/img/w/%s.png", weatherResponse.getWeather().get(0).getIcon())).into(weatherIcon);
+        Picasso.with(getContext()).load(String.format("http://openweathermap.org/img/w/%s.png", weatherResponse.getWeather().get(0).getIcon())).into(ivWeather);
     }
 
     // this for deprecated versions before Android API 28

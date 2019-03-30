@@ -16,7 +16,7 @@ public class PhotosActivity extends BaseDetailsActivity {
         toolbar = findViewById(R.id.toolbar);
         setToolbar(getString(R.string.photos));
 
-        getSupportFragmentManager().beginTransaction().add(R.id.screenContainer, PhotosFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.flScreenContainer, PhotosFragment.newInstance()).commit();
     }
 
     public static Intent createIntent(Context context) {

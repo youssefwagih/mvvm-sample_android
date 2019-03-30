@@ -15,6 +15,6 @@ public class MainActivity extends BaseActivity {
         toolbar = findViewById(R.id.toolbar);
         setToolbar(getString(R.string.home));
 
-        getSupportFragmentManager().beginTransaction().add(R.id.screenContainer, WeatherFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.flScreenContainer, WeatherFragment.newInstance()).commit();
     }
 }
