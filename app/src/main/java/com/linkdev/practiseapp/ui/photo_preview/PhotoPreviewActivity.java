@@ -25,7 +25,7 @@ public class PhotoPreviewActivity extends BaseDetailsActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
-        setToolbar(getString(R.string.photos));
+        setToolbar(getString(R.string.photo_preview));
 
         File file = null;
         if (getIntent().getExtras() != null)

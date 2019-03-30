@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.linkdev.practiseapp.R;
 import com.linkdev.practiseapp.repository.model.WeatherResponse;
@@ -168,8 +169,8 @@ public class WeatherFragment extends Fragment {
     private void setImageView() {
         iv.setImageBitmap(bitmap);
         try {
-
             savebitmap(bitmap, getContext());
+            Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

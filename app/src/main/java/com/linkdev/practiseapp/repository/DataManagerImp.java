@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.linkdev.practiseapp.BuildConfig;
 import com.linkdev.practiseapp.network.RetrofitClientInstance;
 import com.linkdev.practiseapp.repository.model.WeatherResponse;
 import com.linkdev.practiseapp.repository.remote.GetDataService;
@@ -38,7 +39,7 @@ public class DataManagerImp implements DataManager {
         final MutableLiveData<WeatherResponse> weatherResponseMutableLiveData = new MutableLiveData<>();
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<WeatherResponse> call = service.getCurrentWeatherData();
+        Call<WeatherResponse> call = service.getCurrentWeatherData(BuildConfig.API_KEY, "cairo", "metric");
         call.enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, retrofit2.Response<WeatherResponse> response) {
